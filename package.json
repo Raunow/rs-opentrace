@@ -1,0 +1,7 @@
+{
+	"name": "@raunow/rs-opentracing-wrapper",
+	"version": "0.1.0",
+	"scripts": {
+		"publish": "publish --access=public"
+	}
+}
