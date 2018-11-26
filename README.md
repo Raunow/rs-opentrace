@@ -1,1 +1,1 @@
-"# rs-opentracing-wrapper" 
+# rs-opentracing-wrapper
