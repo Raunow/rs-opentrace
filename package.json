@@ -1,7 +1,23 @@
 {
 	"name": "@raunow/rs-opentracing-wrapper",
 	"version": "0.1.0",
+	"description": "Wraps a openTracing framework in order to minimise dependencies",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Raunow/rs-opentracing-wrapper"
+	},
+	"license": "MIT",
+	"main": "dist/index.js",
 	"scripts": {
-		"publish": "publish --access=public"
+		"publish": "publish --access=public",
+		"compile": "tsc"
+	},
+	"devDependencies": {
+		"@types/node": "^10.12.10",
+		"tslint": "^5.11.0",
+		"typescript": "^3.1.6"
+	},
+	"dependencies": {
+		"jaeger-client": "^3.13.0"
 	}
 }
