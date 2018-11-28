@@ -55,7 +55,7 @@ class Tracer {
 	}
 
 	private InitialiseTracer: any = (): OGTracer => {
-		let PATH: string = '../../jaegerconfig.json';
+		let PATH: string = '../../traceconfig.json';
 		let config: config;
 		let options: options;
 		if (existsSync(PATH)) {
