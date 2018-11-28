@@ -1,7 +1,10 @@
 import { initTracer as InitJaegerTracer, config, options, Tracer as OGTracer, opentracing, Span as OGSpan } from 'jaeger-client';
 import { Span } from '../index';
-import { existsSync, readFileSync } from 'fs';
-import { wrapperconfig } from './configTemplate';
+import { existsSync, readFile, readFileSync } from 'fs';
+import { traceconfig } from '../config-template/traceconfig';
+import { tags } from '../config-template/tags';
+import * as path from 'path';
+import { DEFAULT_ENCODING } from 'crypto';
 
 //Tracer: one to many Spans
 class Tracer {
@@ -55,19 +58,28 @@ class Tracer {
 	}
 
 	private InitialiseTracer: any = (): OGTracer => {
-		let PATH: string = '../../traceconfig.json';
+		let PATH: string = path.resolve(__dirname, '../../../../..', 'traceconfig.json')
 		let config: config;
 		let options: options;
 		if (existsSync(PATH)) {
-			let jsonConfigs: wrapperconfig;
-			console.log(jsonConfigs = (readFileSync(PATH).toJSON().data)[0] as wrapperconfig);
+			let jsonConfigs: traceconfig = JSON.parse(readFileSync(PATH).toString());
 			config = jsonConfigs.config;
 			options = jsonConfigs.options
-		} else {
-			config = this.GetConfig();
+		} 
+
+		if (options === undefined) {
 			options = this.GetOptions();
+		} else {
+			let tags: tags = options.tags;
+			if (tags !== undefined){
+				options.tags = this.GetTags(tags.uptime, tags.pid, tags.arch, tags.platform);
+			}
 		}
-		options.tags = this.GetTags(options.tags);
+		
+		if (config === undefined) {
+			config = this.GetConfig();
+		}
+
 		return InitJaegerTracer(config, options);
 	}
 
@@ -102,19 +114,20 @@ class Tracer {
 		return opts
 	}
 
-	private GetTags(opts:{ uptime?: boolean, pid?: boolean, arch?: boolean, platform?:boolean } ) {
+	private GetTags(uptime: boolean = false, pid: boolean = false, arch: boolean = false, platform:boolean = false) {
 		let tags: any = {};
-		if (opts.uptime){
+
+		if (uptime){
 			tags.uptime = process.uptime();
 		}
-		if (opts.pid){
+		if (pid){
 			tags.pid = process.pid;
 		}
-		if (opts.arch){
+		if (arch){
 			tags.arch = process.arch;
 		}
-		if (opts.platform){
-			process.platform;
+		if (platform){
+			tags.platform = process.platform;
 		}
 
 		return tags;

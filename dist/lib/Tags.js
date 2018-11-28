@@ -33,9 +33,9 @@ exports.Tags = {
     PEER_HOST_IPV6: 'peer.ipv6',
     // PEER_PORT (number) records port number of the peer
     PEER_PORT: 'peer.port',
-    /** ------------------------------------------------------------------------
-    * HTTP tags
-    * ---------------------------------------------------------------------------*/
+    /* ------------------------------------------------------------------------
+    *  HTTP tags
+    *  ------------------------------------------------------------------------*/
     // HTTP_URL (string) should be the URL of the request being handled in this
     // segment of the trace, in standard URI format. The protocol is optional.
     HTTP_URL: 'http.url',
