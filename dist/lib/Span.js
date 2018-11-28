@@ -26,4 +26,3 @@ class Span {
     }
 }
 exports.Span = Span;
-//# sourceMappingURL=Span.js.map

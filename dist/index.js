@@ -6,4 +6,3 @@ const Span_1 = require("./lib/Span");
 exports.Span = Span_1.Span;
 const Tracer_1 = require("./lib/Tracer");
 exports.Tracer = Tracer_1.tracer;
-//# sourceMappingURL=index.js.map

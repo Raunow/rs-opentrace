@@ -46,4 +46,3 @@ class Tracer {
     }
 }
 exports.tracer = new Tracer('Cluster Log'); //Read a Tracing.json for name
-//# sourceMappingURL=Tracer.js.map
