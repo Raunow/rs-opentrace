@@ -17,7 +17,7 @@ class Span {
     Log(logTitle, message) {
         this._span.log({ [logTitle]: message });
     }
-    LogDetail(Log) {
+    AddLogs(Log) {
         this._span.log(Log);
     }
     Tag(tag, value) {

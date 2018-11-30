@@ -21,7 +21,7 @@ export class Span {
 	Log(logTitle: string, message: string): void {
 		this._span.log({[logTitle]: message});
 	}
-	LogDetail(Log: {}){
+	AddLogs(Log: {}){
 		this._span.log(Log)
 	}
 
