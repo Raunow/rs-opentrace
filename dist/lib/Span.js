@@ -23,7 +23,7 @@ class Span {
     LogError(reason, error) {
         this.Tag(index_1.Tags.ERROR, true);
         this.AddLogs({
-            [index_1.Tags.ERROR]: `Invalid request body`,
+            [index_1.Tags.ERROR]: reason,
             'error.name': error.name,
             'error.stack': this._TrimStackTrace(error)
         });
