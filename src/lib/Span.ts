@@ -7,10 +7,10 @@ export class Span {
 
 	constructor(name: string, root?: Span){
 		if (root){
-			this._span = Tracer.tracer.startSpan(name, {childOf: root._span});
+			this._span = Tracer._tracer.startSpan(name, {childOf: root._span});
 			this._parentSpan = root;
 		} else {
-			this._span = Tracer.tracer.startSpan(name);
+			this._span = Tracer._tracer.startSpan(name);
 		}
 	}
 

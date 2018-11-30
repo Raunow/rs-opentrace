@@ -4,11 +4,11 @@ const index_1 = require("../index");
 class Span {
     constructor(name, root) {
         if (root) {
-            this._span = index_1.Tracer.tracer.startSpan(name, { childOf: root._span });
+            this._span = index_1.Tracer._tracer.startSpan(name, { childOf: root._span });
             this._parentSpan = root;
         }
         else {
-            this._span = index_1.Tracer.tracer.startSpan(name);
+            this._span = index_1.Tracer._tracer.startSpan(name);
         }
     }
     Log(logTitle, message) {

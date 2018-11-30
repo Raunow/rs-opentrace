@@ -7,10 +7,10 @@ import { resolve } from 'path';
 
 //Tracer: one to many Spans
 class Tracer {
-	tracer: OGTracer;
+	_tracer: OGTracer;
 
 	constructor() {
-		this.tracer = this.InitialiseTracer()
+		this._tracer = this.InitialiseTracer()
 	}
 
 	StartSpan(name: string, rootSpan?: Span) {
@@ -18,11 +18,11 @@ class Tracer {
 	}
 
 	InjectIntoHeaders(span: Span, headers: {}){
-		this.tracer.inject(span._span, opentracing.FORMAT_HTTP_HEADERS, headers)
+		this._tracer.inject(span._span, opentracing.FORMAT_HTTP_HEADERS, headers)
 	}
 
 	ExtractFromRequest(request: any): Span {
-		let spanContext: OGSpan = this.tracer.extract(opentracing.FORMAT_HTTP_HEADERS, request.headers);
+		let spanContext: OGSpan = this._tracer.extract(opentracing.FORMAT_HTTP_HEADERS, request.headers);
 		
 		if (spanContext === undefined) 
 			return null;
@@ -34,7 +34,7 @@ class Tracer {
 	}
 
 	Close() {
-		this.tracer.close()
+		this._tracer.close()
 	}
 
 	private InitialiseTracer: any = (): OGTracer => {

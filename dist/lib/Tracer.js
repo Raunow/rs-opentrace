@@ -13,16 +13,16 @@ class Tracer {
             let config = this.GetConfig(configuration);
             return jaeger_client_1.initTracer(config, options);
         };
-        this.tracer = this.InitialiseTracer();
+        this._tracer = this.InitialiseTracer();
     }
     StartSpan(name, rootSpan) {
         return new index_1.Span(name, rootSpan);
     }
     InjectIntoHeaders(span, headers) {
-        this.tracer.inject(span._span, jaeger_client_1.opentracing.FORMAT_HTTP_HEADERS, headers);
+        this._tracer.inject(span._span, jaeger_client_1.opentracing.FORMAT_HTTP_HEADERS, headers);
     }
     ExtractFromRequest(request) {
-        let spanContext = this.tracer.extract(jaeger_client_1.opentracing.FORMAT_HTTP_HEADERS, request.headers);
+        let spanContext = this._tracer.extract(jaeger_client_1.opentracing.FORMAT_HTTP_HEADERS, request.headers);
         if (spanContext === undefined)
             return null;
         let span = new index_1.Span(spanContext._operationName);
@@ -30,7 +30,7 @@ class Tracer {
         return span;
     }
     Close() {
-        this.tracer.close();
+        this._tracer.close();
     }
     ReadTraceConfig() {
         let PATH = path_1.resolve(__dirname, '../../../../..', 'traceconfig.json');
