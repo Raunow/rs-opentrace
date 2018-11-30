@@ -17,7 +17,7 @@ class Span {
     LogDetail(Log) {
         this._span.log(Log);
     }
-    SetTag(tag, value) {
+    Tag(tag, value) {
         this._span.setTag(tag, value);
     }
     Tracer() {
