@@ -27,7 +27,7 @@ export class Span {
 	LogError(reason: string, error: Error){
 		this.Tag(Tags.ERROR, true);
 		this.AddLogs({
-			[Tags.ERROR]: `Invalid request body`,
+			[Tags.ERROR]: reason,
 			'error.name': error.name,
 			'error.stack': this._TrimStackTrace(error)});
 	}
