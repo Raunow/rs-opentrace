@@ -22,7 +22,7 @@ export class Span {
 		this._span.log(Log)
 	}
 
-	SetTag(tag: any, value: any): void {
+	Tag(tag: any, value: any): void {
 		this._span.setTag(tag, value)
 	}
 
