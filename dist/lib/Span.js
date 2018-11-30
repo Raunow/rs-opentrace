@@ -11,6 +11,9 @@ class Span {
             this._span = index_1.Tracer._tracer.startSpan(name);
         }
     }
+    ChildSpan(name) {
+        return new Span(name, this);
+    }
     Log(logTitle, message) {
         this._span.log({ [logTitle]: message });
     }
@@ -20,11 +23,11 @@ class Span {
     Tag(tag, value) {
         this._span.setTag(tag, value);
     }
-    Tracer() {
-        return index_1.Tracer;
+    AddTags(tags) {
+        this._span.addTags(tags);
     }
-    NewChildSpan(name) {
-        return new Span(name, this);
+    get Tracer() {
+        return index_1.Tracer;
     }
     Finish() {
         this._span.finish();
