@@ -14,10 +14,13 @@ export class Span {
 		}
 	}
 
+	ChildSpan(name: string): Span {
+		return new Span(name, this);
+	}
+
 	Log(logTitle: string, message: string): void {
 		this._span.log({[logTitle]: message});
 	}
-
 	LogDetail(Log: {}){
 		this._span.log(Log)
 	}
@@ -25,13 +28,12 @@ export class Span {
 	Tag(tag: any, value: any): void {
 		this._span.setTag(tag, value)
 	}
-
-	Tracer(): any {
-		return Tracer;
+	AddTags(tags: {}){
+		this._span.addTags(tags);
 	}
 
-	NewChildSpan(name: string): Span {
-		return new Span(name, this);
+	get Tracer(): any {
+		return Tracer;
 	}
 
 	Finish(): void {
