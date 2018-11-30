@@ -6,8 +6,10 @@ export declare class Span {
     ChildSpan(name: string): Span;
     Log(logTitle: string, message: string): void;
     AddLogs(Log: {}): void;
+    LogError(reason: string, error: Error): void;
     Tag(tag: any, value: any): void;
     AddTags(tags: {}): void;
     readonly Tracer: any;
     Finish(): void;
+    private _TrimStackTrace;
 }

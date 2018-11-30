@@ -20,6 +20,14 @@ class Span {
     AddLogs(Log) {
         this._span.log(Log);
     }
+    LogError(reason, error) {
+        this.Tag(index_1.Tags.ERROR, true);
+        this.AddLogs({
+            [index_1.Tags.ERROR]: `Invalid request body`,
+            'error.name': error.name,
+            'error.stack': this._TrimStackTrace(error)
+        });
+    }
     Tag(tag, value) {
         this._span.setTag(tag, value);
     }
@@ -31,6 +39,22 @@ class Span {
     }
     Finish() {
         this._span.finish();
+    }
+    _TrimStackTrace(stack) {
+        let trace;
+        if (typeof stack === typeof Error)
+            trace = stack.stack.replace(/^Error\s+/, '').split("\n");
+        else
+            trace = stack.replace(/^Error\s+/, '').split("\n");
+        for (let i = 0; i < 8; i++)
+            trace.pop();
+        let done = new Array();
+        trace.forEach(function (caller) {
+            let temp = caller.split("\\").pop();
+            caller = caller.replace(/at /, '').replace(/\@.+/, '').replace(/ \(.+\)/, '');
+            done.push((`${caller} (${temp}`).trim());
+        });
+        return done.join("\n");
     }
 }
 exports.Span = Span;
