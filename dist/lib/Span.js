@@ -42,17 +42,18 @@ class Span {
     }
     _TrimStackTrace(stack) {
         let trace;
+        let done = new Array();
         if (typeof stack === typeof Error)
             trace = stack.stack.replace(/^Error\s+/, '').split("\n");
         else
             trace = stack.replace(/^Error\s+/, '').split("\n");
-        for (let i = 0; i < 8; i++)
-            trace.pop();
-        let done = new Array();
         trace.forEach(function (caller) {
-            let temp = caller.split("\\").pop();
-            caller = caller.replace(/at /, '').replace(/\@.+/, '').replace(/ \(.+\)/, '');
-            done.push((`${caller} (${temp}`).trim());
+            let src = caller.split("\\").pop().replace(/\s*?at .*? \(/, '');
+            let match = caller.match(/at (.*?) /);
+            if (match) {
+                caller = match[1];
+                done.push(caller + " (" + src);
+            }
         });
         return done.join("\n");
     }
