@@ -27,4 +27,6 @@ export declare const Tags: {
     HTTP_URL: string;
     HTTP_METHOD: string;
     HTTP_STATUS_CODE: string;
+    HTTP_PORT: string;
+    HTTP_RESPONSE: string;
 };

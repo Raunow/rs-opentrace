@@ -45,4 +45,8 @@ exports.Tags = {
     // HTTP_STATUS_CODE (number) is the numeric HTTP status code (200, 404, etc)
     // of the HTTP response.
     HTTP_STATUS_CODE: 'http.status_code',
+    // HTTP_PORT (number) is the numeric port for the given connection
+    HTTP_PORT: 'http.port',
+    // HTTP_RESPONSE (string) should log the response of the request.
+    HTTP_RESPONSE: 'http.response',
 };
