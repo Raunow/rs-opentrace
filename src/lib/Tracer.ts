@@ -54,17 +54,20 @@ class Tracer {
 		return null;
 	}
 	private GetOptions(cfg: TraceConfig): config{
-		if (cfg.options === undefined)
+		if (cfg.options)
 			return this.SetOptions();
 		
+		if (cfg.options.logToConsole)
+			cfg.options = this.SetOptions();
+		
 		let tags: tags = cfg.options.tags;
-		if (tags !== undefined)
+		if (!tags)
 			cfg.options.tags = this.SetTags(tags.pid, tags.arch, tags.platform);
 		
 		return cfg.options;
 	}
 	private GetConfig(cfg: TraceConfig): config {
-		if (cfg.config === undefined)
+		if (cfg.config)
 			return this.SetConfig()
 		
 		return cfg.config;
@@ -83,7 +86,7 @@ class Tracer {
 	}
 	private SetConfig(): config {
 		return {
-			serviceName: process.env.npm_package_name,
+			serviceName: process.env.name,
 			sampler: {
 				type: "const",
 				param: 1

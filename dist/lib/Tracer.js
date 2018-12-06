@@ -39,15 +39,17 @@ class Tracer {
         return null;
     }
     GetOptions(cfg) {
-        if (cfg.options === undefined)
+        if (cfg.options)
             return this.SetOptions();
+        if (cfg.options.logToConsole)
+            cfg.options = this.SetOptions();
         let tags = cfg.options.tags;
-        if (tags !== undefined)
+        if (!tags)
             cfg.options.tags = this.SetTags(tags.pid, tags.arch, tags.platform);
         return cfg.options;
     }
     GetConfig(cfg) {
-        if (cfg.config === undefined)
+        if (cfg.config)
             return this.SetConfig();
         return cfg.config;
     }
@@ -65,7 +67,7 @@ class Tracer {
     }
     SetConfig() {
         return {
-            serviceName: process.env.npm_package_name,
+            serviceName: process.env.name,
             sampler: {
                 type: "const",
                 param: 1
