@@ -39,9 +39,16 @@ class Tracer {
 
 	private InitialiseTracer: any = (): OGTracer => {
 		let configuration: TraceConfig = this.ReadTraceConfig();
-		let options: options = this.GetOptions(configuration);
-		let config: config = this.GetConfig(configuration);
-
+		let options: options;
+		let config: config
+		if (configuration){
+			options = this.GetOptions(configuration);
+			config = this.GetConfig(configuration);
+		} else {
+			options = this.SetOptions();
+			config = this.SetConfig();
+		}
+		 
 		return InitJaegerTracer(config, options);
 	}
 

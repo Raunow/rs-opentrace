@@ -9,8 +9,16 @@ class Tracer {
     constructor() {
         this.InitialiseTracer = () => {
             let configuration = this.ReadTraceConfig();
-            let options = this.GetOptions(configuration);
-            let config = this.GetConfig(configuration);
+            let options;
+            let config;
+            if (configuration) {
+                options = this.GetOptions(configuration);
+                config = this.GetConfig(configuration);
+            }
+            else {
+                options = this.SetOptions();
+                config = this.SetConfig();
+            }
             return jaeger_client_1.initTracer(config, options);
         };
         this._tracer = this.InitialiseTracer();
