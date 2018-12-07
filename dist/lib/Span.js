@@ -40,13 +40,10 @@ class Span {
     Finish() {
         this._span.finish();
     }
-    _TrimStackTrace(stack) {
+    _TrimStackTrace(error) {
         let trace;
         let done = new Array();
-        if (typeof stack === typeof Error)
-            trace = stack.stack.replace(/^Error\s+/, '').split("\n");
-        else
-            trace = stack.replace(/^Error\s+/, '').split("\n");
+        trace = error.stack.replace(/^Error\s+/, '').split("\n");
         trace.forEach(function (caller) {
             let src = caller.split("\\").pop().replace(/\s*?at .*? \(/, '');
             let match = caller.match(/at (.*?) /);

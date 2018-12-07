@@ -17,19 +17,19 @@ class Tracer {
 		return new Span(name, rootSpan);
 	}
 
-	InjectIntoHeaders(span: Span, headers: {}){
+	InjectIntoHeaders(span: Span, headers: {}) {
 		this._tracer.inject(span._span, opentracing.FORMAT_HTTP_HEADERS, headers)
 	}
 
 	ExtractFromRequest(request: any): Span {
 		let spanContext: OGSpan = this._tracer.extract(opentracing.FORMAT_HTTP_HEADERS, request.headers);
-		
-		if (spanContext === undefined) 
+
+		if (spanContext === undefined)
 			return null;
 
-		let span: Span =  new Span(spanContext._operationName);
+		let span: Span = new Span(spanContext._operationName);
 		span._span = spanContext
-		
+
 		return span;
 	}
 
@@ -39,46 +39,46 @@ class Tracer {
 
 	private InitialiseTracer: any = (): OGTracer => {
 		let configuration: TraceConfig = this.ReadTraceConfig();
-		let options: options;
-		let config: config
-		if (configuration){
-			options = this.GetOptions(configuration);
-			config = this.GetConfig(configuration);
-		} else {
-			options = this.SetOptions();
-			config = this.SetConfig();
-		}
-		 
+		let config: config = this.GetConfig(configuration);
+		let options: options = this.GetOptions(configuration);
+
 		return InitJaegerTracer(config, options);
 	}
 
-	private ReadTraceConfig(){
+	private ReadTraceConfig() {
 		let PATH: string = resolve(__dirname, '../../../../..', 'traceconfig.json')
 
-		if (existsSync(PATH)) 
+		if (existsSync(PATH))
 			return JSON.parse(readFileSync(PATH).toString());
-		
+
 		return null;
 	}
-	private GetOptions(cfg: TraceConfig): config{
-		if (cfg.options)
-			return this.SetOptions();
-		
-		if (cfg.options.logToConsole)
-			cfg.options = this.SetOptions();
-		
-		let tags: tags = cfg.options.tags;
-		if (!tags)
-			cfg.options.tags = this.SetTags(tags.pid, tags.arch, tags.platform);
-		
+
+	private GetOptions(cfg: TraceConfig): config {
+		try {
+			if (!cfg.options)
+				return this.SetOptions();
+
+			if (cfg.options.logToConsole)
+				cfg.options = this.SetOptions();
+
+			let tags: any = cfg.options.tags;
+			if (!tags){
+				cfg.options.tags = this.GetTags(tags);
+			}
+		} catch { }
+
 		return cfg.options;
 	}
+
 	private GetConfig(cfg: TraceConfig): config {
-		if (cfg.config)
-			return this.SetConfig()
-		
-		return cfg.config;
+		try {
+			if (!cfg.config) {
+				return this.SetConfig()
+			}
+		} catch { }
 	}
+
 	private SetOptions(): options {
 		return {
 			logger: {
@@ -91,9 +91,10 @@ class Tracer {
 			}
 		};
 	}
+
 	private SetConfig(): config {
 		return {
-			serviceName: process.env.name,
+			serviceName: 'rs-opentracing',
 			sampler: {
 				type: "const",
 				param: 1
@@ -103,18 +104,33 @@ class Tracer {
 			},
 		}
 	}
-	private SetTags(pid: boolean = false, arch: boolean = false, platform:boolean = false) {
+
+	private GetTags(inputTags: any): any {
 		let tags: any = {};
 
-		if (pid)
-			tags.pid = process.pid;
-		
-		if (arch)
-			tags.arch = process.arch;
-		
-		if (platform)
-			tags.platform = process.platform;
-		
+		Object.keys(inputTags).forEach((key: string) => {
+			switch (key){
+				case 'pid':
+					tags.pid = process.pid;
+					break;
+				case 'startTime':
+					tags.startTime = new Date().valueOf();
+					break;
+				case 'arch':
+					tags.arch = process.arch;
+					break;
+				case 'platform':
+					tags.platform = process.platform;
+					break;
+				case 'clientType':
+					tags.clientType = inputTags[key];
+					break;
+				default:
+					tags[key] = inputTags[key];
+					break;
+			}
+		});
+
 		return tags;
 	}
 }

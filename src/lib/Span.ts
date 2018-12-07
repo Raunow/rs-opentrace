@@ -48,14 +48,11 @@ export class Span {
 		this._span.finish();
 	}
 
-	private _TrimStackTrace(stack: string | Error) {
+	private _TrimStackTrace(error: Error) {
 		let trace: Array<string>;
 		let done: Array<string> = new Array<string>();
 
-		if (typeof stack === typeof Error)
-			trace = (stack as Error).stack.replace(/^Error\s+/, '').split("\n");
-		else
-			trace = (stack as string).replace(/^Error\s+/, '').split("\n");
+			trace = error.stack.replace(/^Error\s+/, '').split("\n");
 
 		trace.forEach(function (caller: string) {
 			let src: string = caller.split("\\").pop().replace(/\s*?at .*? \(/, '');

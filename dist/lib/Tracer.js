@@ -9,16 +9,8 @@ class Tracer {
     constructor() {
         this.InitialiseTracer = () => {
             let configuration = this.ReadTraceConfig();
-            let options;
-            let config;
-            if (configuration) {
-                options = this.GetOptions(configuration);
-                config = this.GetConfig(configuration);
-            }
-            else {
-                options = this.SetOptions();
-                config = this.SetConfig();
-            }
+            let config = this.GetConfig(configuration);
+            let options = this.GetOptions(configuration);
             return jaeger_client_1.initTracer(config, options);
         };
         this._tracer = this.InitialiseTracer();
@@ -47,19 +39,26 @@ class Tracer {
         return null;
     }
     GetOptions(cfg) {
-        if (cfg.options)
-            return this.SetOptions();
-        if (cfg.options.logToConsole)
-            cfg.options = this.SetOptions();
-        let tags = cfg.options.tags;
-        if (!tags)
-            cfg.options.tags = this.SetTags(tags.pid, tags.arch, tags.platform);
+        try {
+            if (!cfg.options)
+                return this.SetOptions();
+            if (cfg.options.logToConsole)
+                cfg.options = this.SetOptions();
+            let tags = cfg.options.tags;
+            if (!tags) {
+                cfg.options.tags = this.GetTags(tags);
+            }
+        }
+        catch (_a) { }
         return cfg.options;
     }
     GetConfig(cfg) {
-        if (cfg.config)
-            return this.SetConfig();
-        return cfg.config;
+        try {
+            if (!cfg.config) {
+                return this.SetConfig();
+            }
+        }
+        catch (_a) { }
     }
     SetOptions() {
         return {
@@ -75,7 +74,7 @@ class Tracer {
     }
     SetConfig() {
         return {
-            serviceName: process.env.name,
+            serviceName: 'rs-opentracing',
             sampler: {
                 type: "const",
                 param: 1
@@ -85,14 +84,30 @@ class Tracer {
             },
         };
     }
-    SetTags(pid = false, arch = false, platform = false) {
+    GetTags(inputTags) {
         let tags = {};
-        if (pid)
-            tags.pid = process.pid;
-        if (arch)
-            tags.arch = process.arch;
-        if (platform)
-            tags.platform = process.platform;
+        Object.keys(inputTags).forEach((key) => {
+            switch (key) {
+                case 'pid':
+                    tags.pid = process.pid;
+                    break;
+                case 'startTime':
+                    tags.startTime = new Date().valueOf();
+                    break;
+                case 'arch':
+                    tags.arch = process.arch;
+                    break;
+                case 'platform':
+                    tags.platform = process.platform;
+                    break;
+                case 'clientType':
+                    tags.clientType = inputTags[key];
+                    break;
+                default:
+                    tags[key] = inputTags[key];
+                    break;
+            }
+        });
         return tags;
     }
 }

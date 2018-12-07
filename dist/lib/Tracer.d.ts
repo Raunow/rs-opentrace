@@ -13,7 +13,7 @@ declare class Tracer {
     private GetConfig;
     private SetOptions;
     private SetConfig;
-    private SetTags;
+    private GetTags;
 }
 export declare const tracer: Tracer;
 export {};
