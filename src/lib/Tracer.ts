@@ -38,7 +38,7 @@ class Tracer {
 	}
 
 	private InitialiseTracer: any = (): OGTracer => {
-		let configuration: TraceConfig = this.ReadTraceConfig();
+		let configuration: {} = this.ReadTraceConfig();
 		let config: config = this.GetConfig(configuration);
 		let options: options = this.GetOptions(configuration);
 
@@ -54,7 +54,7 @@ class Tracer {
 		return null;
 	}
 
-	private GetOptions(cfg: TraceConfig): config {
+	private GetOptions(cfg: any): config {
 		try {
 			if (!cfg.options)
 				return this.SetOptions();
@@ -71,7 +71,7 @@ class Tracer {
 		return cfg.options;
 	}
 
-	private GetConfig(cfg: TraceConfig): config {
+	private GetConfig(cfg: any): config {
 		try {
 			if (!cfg.config) {
 				return this.SetConfig()

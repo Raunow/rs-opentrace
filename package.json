@@ -1,6 +1,6 @@
 {
 	"name": "@raunow/rs-opentrace",
-	"version": "0.2.14",
+	"version": "0.2.15",
 	"description": "Wraps an openTracing framework in order to minimise dependencies",
 	"repository": {
 		"type": "git",
