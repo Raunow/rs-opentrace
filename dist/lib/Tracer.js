@@ -7,6 +7,7 @@ const path_1 = require("path");
 //Tracer: one to many Spans
 class Tracer {
     constructor() {
+        this._consoleLogMsg = false;
         this.InitialiseTracer = () => {
             let configuration = this.ReadTraceConfig();
             let config = this.GetConfig(configuration);
@@ -39,38 +40,31 @@ class Tracer {
         return null;
     }
     GetOptions(cfg) {
+        let options;
         try {
             if (!cfg.options)
                 return this.SetOptions();
-            if (cfg.options.logToConsole)
-                cfg.options = this.SetOptions();
-            let tags = cfg.options.tags;
-            if (!tags) {
-                cfg.options.tags = this.GetTags(tags);
-            }
+            if (cfg.options.consoleLogSpans === true)
+                options = this.SetOptions();
+            if (cfg.options.consoleLogMsg === true)
+                this._consoleLogMsg = true;
+            if (cfg.options.tags)
+                options.tags = this.GetTags(cfg.options.tags);
         }
         catch (_a) { }
-        return cfg.options;
+        return options;
     }
     GetConfig(cfg) {
         try {
             if (!cfg.config) {
-                return this.SetConfig();
+                cfg.config = this.SetConfig();
+            }
+            if (cfg.config.disable === undefined) {
+                cfg.config.disable = false;
             }
         }
         catch (_a) { }
-    }
-    SetOptions() {
-        return {
-            logger: {
-                info(msg) {
-                    console.log("INFO ", msg);
-                },
-                error(msg) {
-                    console.error("ERROR ", msg);
-                }
-            }
-        };
+        return cfg.config;
     }
     SetConfig() {
         return {
@@ -84,6 +78,18 @@ class Tracer {
             },
         };
     }
+    SetOptions() {
+        return {
+            logger: {
+                info(msg) {
+                    console.log("INFO ", msg);
+                },
+                error(msg) {
+                    console.error("ERROR ", msg);
+                }
+            }
+        };
+    }
     GetTags(inputTags) {
         let tags = {};
         Object.keys(inputTags).forEach((key) => {
@@ -91,17 +97,14 @@ class Tracer {
                 case 'pid':
                     tags.pid = process.pid;
                     break;
-                case 'startTime':
-                    tags.startTime = new Date().valueOf();
-                    break;
                 case 'arch':
                     tags.arch = process.arch;
                     break;
                 case 'platform':
                     tags.platform = process.platform;
                     break;
-                case 'clientType':
-                    tags.clientType = inputTags[key];
+                case 'startTime':
+                    tags.startTime = new Date().valueOf();
                     break;
                 default:
                     tags[key] = inputTags[key];

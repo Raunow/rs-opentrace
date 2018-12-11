@@ -4,10 +4,10 @@ export declare class Span {
     _parentSpan: Span;
     constructor(name: string, root?: Span);
     ChildSpan(name: string): Span;
-    Log(logTitle: string, message: string): void;
     AddLogs(Log: {}): void;
+    Log(logTitle: string, message: string): void;
     LogError(reason: string, error: Error): void;
-    Tag(tag: any, value: any): void;
+    Tag(tag: string, value: any): void;
     AddTags(tags: {}): void;
     readonly Tracer: any;
     Finish(): void;

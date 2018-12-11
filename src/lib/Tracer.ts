@@ -1,13 +1,12 @@
 import { initTracer as InitJaegerTracer, config, options, Tracer as OGTracer, opentracing, Span as OGSpan } from 'jaeger-client';
 import { Span } from '../index';
 import { existsSync, readFileSync } from 'fs';
-import { TraceConfig } from '../config-template/traceconfig';
-import { tags } from '../config-template/tags';
 import { resolve } from 'path';
 
 //Tracer: one to many Spans
 class Tracer {
 	_tracer: OGTracer;
+	_consoleLogMsg: Boolean = false;
 
 	constructor() {
 		this._tracer = this.InitialiseTracer()
@@ -54,42 +53,38 @@ class Tracer {
 		return null;
 	}
 
-	private GetOptions(cfg: any): config {
+	private GetOptions(cfg: any): options {
+		let options: options;
 		try {
 			if (!cfg.options)
 				return this.SetOptions();
 
-			if (cfg.options.logToConsole)
-				cfg.options = this.SetOptions();
+			if (cfg.options.consoleLogSpans === true)
+				options = this.SetOptions();
 
-			let tags: any = cfg.options.tags;
-			if (!tags){
-				cfg.options.tags = this.GetTags(tags);
-			}
+			if (cfg.options.consoleLogMsg === true)
+				this._consoleLogMsg = true;
+
+			if (cfg.options.tags)
+				options.tags = this.GetTags(cfg.options.tags);
 		} catch { }
 
-		return cfg.options;
+		return options;
 	}
 
 	private GetConfig(cfg: any): config {
 		try {
 			if (!cfg.config) {
-				return this.SetConfig()
+				cfg.config = this.SetConfig()
 			}
-		} catch { }
-	}
 
-	private SetOptions(): options {
-		return {
-			logger: {
-				info(msg) {
-					console.log("INFO ", msg);
-				},
-				error(msg) {
-					console.error("ERROR ", msg);
-				}
+			if (cfg.config.disable === undefined) {
+				cfg.config.disable = false;
 			}
-		};
+
+		} catch { }
+
+		return cfg.config;
 	}
 
 	private SetConfig(): config {
@@ -104,17 +99,27 @@ class Tracer {
 			},
 		}
 	}
+	
+	private SetOptions(): options {
+		return {
+			logger: {
+				info(msg) {
+					console.log("INFO ", msg);
+				},
+				error(msg) {
+					console.error("ERROR ", msg);
+				}
+			}
+		};
+	}
 
 	private GetTags(inputTags: any): any {
 		let tags: any = {};
 
 		Object.keys(inputTags).forEach((key: string) => {
-			switch (key){
+			switch (key) {
 				case 'pid':
 					tags.pid = process.pid;
-					break;
-				case 'startTime':
-					tags.startTime = new Date().valueOf();
 					break;
 				case 'arch':
 					tags.arch = process.arch;
@@ -122,8 +127,8 @@ class Tracer {
 				case 'platform':
 					tags.platform = process.platform;
 					break;
-				case 'clientType':
-					tags.clientType = inputTags[key];
+				case 'startTime':
+					tags.startTime = new Date().valueOf();
 					break;
 				default:
 					tags[key] = inputTags[key];

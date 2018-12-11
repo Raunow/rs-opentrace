@@ -10,15 +10,23 @@ class Span {
         else {
             this._span = index_1.Tracer._tracer.startSpan(name);
         }
+        if (index_1.Tracer._consoleLogMsg) {
+            console.log(`S> ${name}`);
+        }
     }
     ChildSpan(name) {
         return new Span(name, this);
     }
-    Log(logTitle, message) {
-        this._span.log({ [logTitle]: message });
-    }
     AddLogs(Log) {
         this._span.log(Log);
+        if (index_1.Tracer._consoleLogMsg) {
+            Object.keys(Log).forEach((key) => {
+                console.info(`L> ${key}`, Log[key]);
+            });
+        }
+    }
+    Log(logTitle, message) {
+        this.AddLogs({ [logTitle]: message });
     }
     LogError(reason, error) {
         this.Tag(index_1.Tags.ERROR, true);
@@ -30,9 +38,17 @@ class Span {
     }
     Tag(tag, value) {
         this._span.setTag(tag, value);
+        if (index_1.Tracer._consoleLogMsg) {
+            console.info(`T> ${tag}`, value);
+        }
     }
     AddTags(tags) {
         this._span.addTags(tags);
+        if (index_1.Tracer._consoleLogMsg) {
+            Object.keys(tags).forEach((key) => {
+                console.info(`T> ${key}`, tags[key]);
+            });
+        }
     }
     get Tracer() {
         return index_1.Tracer;
