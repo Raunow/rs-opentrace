@@ -113,8 +113,8 @@ class Tracer {
 		};
 	}
 
-	private GetTags(inputTags: any): any {
-		let tags: any = {};
+	private GetTags(inputTags: any): options {
+		let tags: options = {};
 
 		Object.keys(inputTags).forEach((key: string) => {
 			switch (key) {
