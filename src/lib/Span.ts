@@ -26,7 +26,7 @@ export class Span {
 		this._span.log(Log)
 
 		if (Tracer._consoleLogMsg){
-			Object.keys(Log).forEach((key: string) => {
+			Object.keys(Log).map((key: string) => {
 				console.info(`L> ${key}`, Log[key])
 			});
 		}
@@ -54,7 +54,7 @@ export class Span {
 		this._span.addTags(tags);
 
 		if (Tracer._consoleLogMsg){
-			Object.keys(tags).forEach((key: string) => {
+			Object.keys(tags).map((key: string) => {
 				console.info(`T> ${key}`, tags[key])
 			});
 		}

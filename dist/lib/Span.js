@@ -20,7 +20,7 @@ class Span {
     AddLogs(Log) {
         this._span.log(Log);
         if (index_1.Tracer._consoleLogMsg) {
-            Object.keys(Log).forEach((key) => {
+            Object.keys(Log).map((key) => {
                 console.info(`L> ${key}`, Log[key]);
             });
         }
@@ -45,7 +45,7 @@ class Span {
     AddTags(tags) {
         this._span.addTags(tags);
         if (index_1.Tracer._consoleLogMsg) {
-            Object.keys(tags).forEach((key) => {
+            Object.keys(tags).map((key) => {
                 console.info(`T> ${key}`, tags[key]);
             });
         }
