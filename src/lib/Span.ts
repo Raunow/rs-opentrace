@@ -31,8 +31,10 @@ export class Span {
 			});
 		}
 	}
-	Log(logTitle: string, message: string): void {
-		this.AddLogs({ [logTitle]: message });
+	Log(key: string, value: any): void {
+		this.AddLogs({
+			[key]: value
+		});
 	}
 	LogError(reason: string, error: Error) {
 		this.Tag(Tags.ERROR, true);

@@ -1,6 +1,6 @@
 {
 	"name": "@raunow/rs-opentrace",
-	"version": "0.2.27",
+	"version": "0.3.0",
 	"description": "Wraps an openTracing framework in order to minimise dependencies",
 	"repository": {
 		"type": "git",
@@ -9,9 +9,9 @@
 	"license": "MIT",
 	"main": "dist/index.js",
 	"devDependencies": {
-		"@types/node": "^10.12.10",
-		"tslint": "^5.11.0",
-		"typescript": "^3.1.6"
+		"@types/node": "^10.12.18",
+		"tslint": "^5.12.1",
+		"typescript": "^3.2.2"
 	},
 	"dependencies": {
 		"jaeger-client": "^3.13.0"

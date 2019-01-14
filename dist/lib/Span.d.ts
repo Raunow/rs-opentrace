@@ -5,7 +5,7 @@ export declare class Span {
     constructor(name: string, root?: Span);
     ChildSpan(name: string): Span;
     AddLogs(Log: {}): void;
-    Log(logTitle: string, message: string): void;
+    Log(key: string, value: any): void;
     LogError(reason: string, error: Error): void;
     Tag(tag: string, value: any): void;
     AddTags(tags: {}): void;

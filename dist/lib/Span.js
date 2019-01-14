@@ -25,8 +25,10 @@ class Span {
             });
         }
     }
-    Log(logTitle, message) {
-        this.AddLogs({ [logTitle]: message });
+    Log(key, value) {
+        this.AddLogs({
+            [key]: value
+        });
     }
     LogError(reason, error) {
         this.Tag(index_1.Tags.ERROR, true);
